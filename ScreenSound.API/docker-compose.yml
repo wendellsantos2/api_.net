@@ -3,15 +3,17 @@ version: '3.8'
 services:
   api:
     build:
-      context: ./ScreenSound.API
+      context: .
       dockerfile: Dockerfile
     ports:
       - "8080:80"
     depends_on:
       - mysql
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=server=mysql;port=3306;database=screensound;user=root;password=senha123;
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "Server=mysql;Port=3306;Database=screensound;User=root;Password=senha123;"
+    networks:
+      - app-network
 
   mysql:
     image: mysql:8
@@ -23,6 +25,12 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
 
 volumes:
   mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
