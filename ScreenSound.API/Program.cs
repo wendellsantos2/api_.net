@@ -11,7 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ScreenSoundContext>(options =>
 {
-    var connectionString = "Server=20.119.99.243;Port=3306;Database=ScreenSound;User=root;Password=senha123;";
+    var connectionString = "Server=127.0.0.1;Port=3306;Database=ScreenSound;User=root;Password=@Well32213115;";
+
+
     var serverVersion = ServerVersion.AutoDetect(connectionString);
 
     options

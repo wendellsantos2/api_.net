@@ -1,0 +1,39 @@
+﻿@page "/Artistas"
+@inject ArtistaAPI artistasAPI
+
+<h3>Artistas</h3>
+
+@if (artistas is null)
+{
+    <p><em>Carregando artistas...</em></p>
+}
+else if (artistas.Count == 0)
+{
+    <p>Nenhum artista encontrado.</p>
+}
+else
+{
+    <ul>
+        @foreach (var artista in artistas)
+        {
+            <li>@artista.Nome</li>
+        }
+    </ul>
+}
+
+@code {
+    private ICollection<ArtistaResponse>? artistas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            artistas = await artistasAPI.GetArtistasAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Erro ao buscar artistas: {ex.Message}");
+            artistas = new List<ArtistaResponse>();
+        }
+    }
+}

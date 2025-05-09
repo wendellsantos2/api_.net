@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using ScreenSound.Modelos;
 using ScreenSound.Shared.Modelos.Modelos;
 
@@ -14,15 +15,23 @@ public class ScreenSoundContext : DbContext
     // Construtor manual para console apps
     public ScreenSoundContext() { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+ 
 
-        optionsBuilder.UseMySql(
-            connectionString,
-            ServerVersion.AutoDetect(connectionString)
-        );
+public class ScreenSoundContextFactory : IDesignTimeDbContextFactory<ScreenSoundContext>
+{
+    public ScreenSoundContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ScreenSoundContext>();
+        var connectionString = "Server=127.0.0.1;Port=3306;Database=ScreenSound;User=root;Password=@Well32213115;";
+        var serverVersion = ServerVersion.AutoDetect(connectionString);
+
+        optionsBuilder
+            .UseMySql(connectionString, serverVersion)
+            .UseLazyLoadingProxies();
+
+        return new ScreenSoundContext(optionsBuilder.Options);
     }
+}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
