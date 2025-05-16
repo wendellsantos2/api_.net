@@ -12,32 +12,28 @@ public class ScreenSoundContext : DbContext
     // Construtor para injeção de dependência (ASP.NET)
     public ScreenSoundContext(DbContextOptions<ScreenSoundContext> options) : base(options) { }
 
-    // Construtor manual para console apps
-    public ScreenSoundContext() { }
-
- 
-
-public class ScreenSoundContextFactory : IDesignTimeDbContextFactory<ScreenSoundContext>
-{
-    public ScreenSoundContext CreateDbContext(string[] args)
-    {
-        var optionsBuilder = new DbContextOptionsBuilder<ScreenSoundContext>();
-        var connectionString = "Server=127.0.0.1;Port=3306;Database=ScreenSound;User=root;Password=@Well32213115;";
-        var serverVersion = ServerVersion.AutoDetect(connectionString);
-
-        optionsBuilder
-            .UseMySql(connectionString, serverVersion)
-            .UseLazyLoadingProxies();
-
-        return new ScreenSoundContext(optionsBuilder.Options);
-    }
-}
-
+    // Configuração do modelo
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Musica>()
             .HasMany(m => m.Generos)
             .WithMany(g => g.Musicas)
             .UsingEntity(j => j.ToTable("MusicasGeneros"));
+    }
+}
+
+// Fábrica para criar o DbContext em tempo de design
+public class ScreenSoundContextFactory : IDesignTimeDbContextFactory<ScreenSoundContext>
+{
+    public ScreenSoundContext CreateDbContext(string[] args)
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<ScreenSoundContext>();
+        var connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ScreenSound;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
+
+        optionsBuilder
+            .UseSqlServer(connectionString) // ✅ Agora usando SQL Server corretamente
+            .UseLazyLoadingProxies();
+
+        return new ScreenSoundContext(optionsBuilder.Options);
     }
 }

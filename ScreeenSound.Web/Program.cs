@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Web;
+using MudBlazor.Services;
 using ScreeenSound.Web.Components;
 using ScreeenSound.Web.Services;
 
@@ -17,7 +18,7 @@ builder.Services.AddHttpClient("API", client =>
 
 // Serviço de API customizado (usando IHttpClientFactory)
 builder.Services.AddTransient<ArtistaAPI>();
-
+builder.Services.AddMudServices();
 var app = builder.Build();
 
 // Pipeline de requisição
